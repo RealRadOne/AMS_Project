@@ -1,0 +1,50 @@
+body {
+    font-family: Arial, sans-serif;
+    margin: 20px;
+    background: #f8f8f8;
+  }
+  
+  h2 {
+    color: #333;
+  }
+  
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 40px;
+  }
+  
+  th,
+  td {
+    padding: 8px 12px;
+    border: 1px solid #ccc;
+    text-align: left;
+  }
+  
+  th {
+    background-color: #eaeaea;
+  }
+  
+  form {
+    margin-bottom: 30px;
+    padding: 10px;
+    background: #fff;
+    border: 1px solid #ccc;
+    max-width: 600px;
+  }
+  
+  label,
+  input {
+    display: block;
+    margin-bottom: 10px;
+  }
+  
+  input {
+    padding: 5px;
+    width: 100%;
+  }
+  
+  button {
+    padding: 8px 12px;
+  }
+  
