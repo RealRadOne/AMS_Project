@@ -4,20 +4,36 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Hospital & Patient Viewer</title>
-  <style>
-    body { font-family: Arial, sans-serif; margin: 20px; background: #f8f8f8; }
-    h2 { color: #333; }
-    table { width: 100%; border-collapse: collapse; margin-bottom: 40px; }
-    th, td { padding: 8px 12px; border: 1px solid #ccc; text-align: left; }
-    th { background-color: #eaeaea; }
-  </style>
+  <link rel="stylesheet" href="/website/style.css">
 </head>
 <body>
-  <h2>Patient Data</h2>
-  <table id="Patients"></table>
+  <h2>Find Nearest Hospitals</h2>
+  <form id="location-form">
+    <label for="city">City:</label>
+    <input type="text" id="city" name="city" required>
 
-  <h2>Hospital Locations</h2>
-  <table id="Locations"></table>
+    <label for="state">State:</label>
+    <input type="text" id="state" name="state" required>
+
+    <label for="zip">ZIP Code:</label>
+    <input type="text" id="zip" name="zip" required>
+
+    <button type="submit">Find Nearest Hospitals</button>
+  </form>
+
+  <h2>Nearest Hospitals</h2>
+  <table id="nearest-hospitals"></table>
+
+  <h2>Find Hospitals That Treat your symptoms</h2>
+  <form id="symptom-form">
+    <label for="condition">Condition:</label>
+    <input type="text" id="condition" name="condition" required>
+
+    <button type="submit">Find Right Hospitals</button>
+  </form>
+
+  <h2>Hospitals Matching Symptoms</h2>
+  <table id="symptom-hospitals"></table>
 
   <script src="/website/app.js"></script>
 </body>
