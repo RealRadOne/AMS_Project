@@ -75,7 +75,21 @@ class Controller:
         (condition,))
         return self.cursor.fetchall()
 
+    def get_hospital_by_history(self,patient_id,name):
+        self.cursor.execute(
+        """
+        SELECT p2.hospital, COUNT(*) AS treated_count
+        FROM patient p1
+        INNER JOIN patient p2
+        ON LOWER(p1.medical_condition) = LOWER(p2.medical_condition)
+        WHERE p1.id = %s AND LOWER(p1.name) = LOWER(%s)
+        GROUP BY p2.hospital
+        ORDER BY treated_count DESC
+        """,
+        (patient_id, name))
+        return self.cursor.fetchall()
         
+
 
 
 

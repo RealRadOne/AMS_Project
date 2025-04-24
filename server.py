@@ -46,5 +46,17 @@ def get_hospitals_by_condition():
     hospitals = [{"hospital": row[0], "treatment_count": row[1]} for row in results]
     return jsonify(hospitals)
 
+
+@app.route('/api/patient-hospitals',methods=['POST'])
+def get_hospitals_by_history():
+    data = request.get_json()
+    patient_id = int(data.get('patient_id',''))
+    name       = data.get('name','').strip().lower()
+    
+    results    = controller.get_hospital_by_history(patient_id,name)
+    hospitals = [{"hospital": row[0], "treatment_count": row[1]} for row in results]
+    return jsonify(hospitals)
+
+
 if __name__ == '__main__':
     app.run(debug=True)
