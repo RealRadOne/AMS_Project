@@ -41,6 +41,38 @@
       <a href="/search" class="btn btn-lg btn-primary">Start Searching</a>
     </div>
   </section>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Hospital & Patient Viewer</title>
+  <link rel="stylesheet" href="/website/style.css">
+</head>
+<body>
+  <h2>Find Nearest Hospitals</h2>
+  <form id="location-form">
+    <label for="city">City:</label>
+    <input type="text" id="city" name="city" required>
+
+    <label for="state">State:</label>
+    <input type="text" id="state" name="state" required>
+
+    <label for="zip">ZIP Code:</label>
+    <input type="text" id="zip" name="zip" required>
+
+    <button type="submit">Find Nearest Hospitals</button>
+  </form>
+
+  <h2>Nearest Hospitals</h2>
+  <table id="nearest-hospitals"></table>
+
+  <h2>Find Hospitals That Treat your symptoms</h2>
+  <form id="symptom-form">
+    <label for="condition">Condition:</label>
+    <input type="text" id="condition" name="condition" required>
+
+    <button type="submit">Find Right Hospitals</button>
+  </form>
+
+  <h2>Hospitals Matching Symptoms</h2>
+  <table id="symptom-hospitals"></table>
 
   <section id="features" class="py-5">
     <div class="container text-center">
