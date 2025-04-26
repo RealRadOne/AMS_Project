@@ -4,77 +4,44 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>AMS Hospital Finder</title>
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
-        rel="stylesheet"/>
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css"
-        rel="stylesheet"/>
-  <style>
-    .navbar { background: #fff; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
-    .hero { position: relative; background: url('https://source.unsplash.com/1600x900/?hospital,healthcare') center/cover no-repeat; height: 75vh; display:flex;align-items:center;justify-content:center;color:#fff; }
-    .hero::before { content:"";position:absolute;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.5); }
-    .hero-content { position:relative; z-index:2; text-align:center; }
-    .feature-icon { font-size:3rem; color:#0d6efd; }
-    footer { background:#f8f9fa; padding:1.5rem 0; text-align:center; }
-    footer a { color:#6c757d; margin:0 .5rem; font-size:1.25rem; }
-  </style>
+
+  <!-- Bootstrap & Icons -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet"/>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet"/>
+
+  <!-- Custom Styles -->
+  <link rel="stylesheet" href="/website/style.css">
 </head>
+
 <body>
+  <!-- NAVBAR -->
   <nav class="navbar navbar-expand-lg">
     <div class="container">
       <a class="navbar-brand fw-bold" href="/">AMS Hospital Finder</a>
-      <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
-              data-bs-target="#navbarNav"><span class="navbar-toggler-icon"></span></button>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+        <span class="navbar-toggler-icon"></span>
+      </button>
       <div class="collapse navbar-collapse" id="navbarNav">
         <ul class="navbar-nav ms-auto">
           <li class="nav-item"><a class="nav-link active" href="/">Home</a></li>
-          <li class="nav-item"><a class="nav-link" href="/search">Search</a></li>
+          <li class="nav-item"><a class="nav-link" href="website/search.html">Search</a></li>
           <li class="nav-item"><a class="nav-link" href="#features">Features</a></li>
         </ul>
       </div>
     </div>
   </nav>
 
+  <!-- HERO SECTION -->
   <section class="hero">
     <div class="hero-content">
       <h1 class="display-4 fw-bold">Find the Best Care, Near You</h1>
       <p class="lead mb-4">Locate top-rated hospitals by distance, insurance, specialty, and more.</p>
-      <a href="/search" class="btn btn-lg btn-primary">Start Searching</a>
+      <a href="website/search.html" class="btn btn-lg btn-light text-primary fw-bold">Start Searching</a>
     </div>
   </section>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Hospital & Patient Viewer</title>
-  <link rel="stylesheet" href="/website/style.css">
-</head>
-<body>
-  <h2>Find Nearest Hospitals</h2>
-  <form id="location-form">
-    <label for="city">City:</label>
-    <input type="text" id="city" name="city" required>
 
-    <label for="state">State:</label>
-    <input type="text" id="state" name="state" required>
-
-    <label for="zip">ZIP Code:</label>
-    <input type="text" id="zip" name="zip" required>
-
-    <button type="submit">Find Nearest Hospitals</button>
-  </form>
-
-  <h2>Nearest Hospitals</h2>
-  <table id="nearest-hospitals"></table>
-
-  <h2>Find Hospitals That Treat your symptoms</h2>
-  <form id="symptom-form">
-    <label for="condition">Condition:</label>
-    <input type="text" id="condition" name="condition" required>
-
-    <button type="submit">Find Right Hospitals</button>
-  </form>
-
-  <h2>Hospitals Matching Symptoms</h2>
-  <table id="symptom-hospitals"></table>
-
-  <section id="features" class="py-5">
+  <!-- FEATURES -->
+  <section id="features" class="py-5 bg-light">
     <div class="container text-center">
       <h2 class="mb-5">Why Choose AMS Hospital Finder?</h2>
       <div class="row g-4">
@@ -97,13 +64,7 @@
     </div>
   </section>
 
-  <section class="py-5 bg-primary text-white text-center">
-    <div class="container">
-      <h3 class="mb-3">Ready to Find Your Hospital?</h3>
-      <a href="/search" class="btn btn-light btn-lg">Search Now</a>
-    </div>
-  </section>
-
+  <!-- FOOTER -->
   <footer>
     <div class="container">
       <p class="mb-2">&copy; <span id="year"></span> AMS Project. All rights reserved.</p>
@@ -115,7 +76,10 @@
     </div>
   </footer>
 
+  <!-- Scripts -->
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-  <script>document.getElementById('year').textContent = new Date().getFullYear();</script>
+  <script>
+    document.getElementById('year').textContent = new Date().getFullYear();
+  </script>
 </body>
 </html>

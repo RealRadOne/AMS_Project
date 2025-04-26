@@ -15,12 +15,12 @@ def serve_index():
 def serve_static_file(path):
     return send_from_directory(app.static_folder, path)
 
-@app.route('/api/patients')
+@app.route('/api/patients',methods=['GET'])
 def get_patients():
     patients = controller.get_all_patients()
     return jsonify([vars(p) for p in patients])
 
-@app.route('/api/locations')
+@app.route('/api/locations',methods=['GET'])
 def get_hospitals():
     locations = controller.get_all_locations()
     return jsonify([vars(l) for l in locations])
@@ -33,8 +33,6 @@ def get_nearest_by_location():
     zip_code = data.get('zip', '').strip()
 
     hospitals = controller.get_nearest_hospital(city,state,zip_code)
-    print(city)
-    print(hospitals)
     return jsonify([vars(h) for h in hospitals])
 
 @app.route('/api/condition-hospitals',methods=['POST'])
@@ -57,6 +55,28 @@ def get_hospitals_by_history():
     hospitals = [{"hospital": row[0], "treatment_count": row[1]} for row in results]
     return jsonify(hospitals)
 
+@app.route('/api/test',methods=['POST'])
+def search_hospitals_insurance():
+    data = request.get_json()
+
+    zip  = data.get('zip','').strip()
+    insurance = data.get('insurance','').strip().lower()
+    condition = data.get('condition','').strip().lower()
+    data =  controller.get_hospitals_by_insurance(insurance,zip,condition)
+    return jsonify(data)
+
+
+@app.route('/api/search',methods=['POST'])
+def search_hospitals():
+    data = request.get_json()
+
+    zip = data.get('zip','').strip()
+    insurance = data.get('insurance','').strip().lower()
+    condition = data.get('condition','').strip().lower()
+    age_group = data.get('age_group','').strip().lower()
+
+    data =  controller.get_hospitals_by_flexible_criteria(insurance,zip,condition)
+    return jsonify(data)
 
 if __name__ == '__main__':
     app.run(debug=True)

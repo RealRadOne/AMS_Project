@@ -93,6 +93,26 @@ def load_hospitals_from_csv(cur, df):
             row['HELIPAD']
         ))
 
+def load_mapping_from_csv(cur,df):
+    cur.execute("""
+        CREATE TABLE IF NOT EXISTS mapping (
+            Hospital TEXT PRIMARY KEY,
+            name TEXT
+        );
+    """)
+
+    for _, row in df.iterrows():
+        cur.execute("""
+            INSERT INTO mapping 
+            (
+                Hospital,name
+            )VALUES (%s, %s)
+            ON CONFLICT (Hospital) DO NOTHING;
+        """, (
+            row['Hospital'],
+            row['NAME']
+            ))
+
 def main():
     conn = psycopg2.connect(
         dbname="testdb", user="postgres", password="postgres", host="localhost", port="5432"
@@ -104,6 +124,9 @@ def main():
 
     hospital_df = pd.read_csv("hospital_location.csv")
     load_hospitals_from_csv(cur, hospital_df)
+
+    mapping_df = pd.read_csv("mapping.csv")
+    load_mapping_from_csv(cur, mapping_df)
 
     conn.commit()
     cur.close()

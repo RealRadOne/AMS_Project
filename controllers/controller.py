@@ -2,6 +2,7 @@ import psycopg2
 from models.hospital import Hospital
 from models.location import Location
 from models.patient import Patient
+import psycopg2.extras
 
 class Controller:
     def __init__(self, view):
@@ -9,7 +10,7 @@ class Controller:
         self.conn = psycopg2.connect(
             dbname="testdb", user="postgres", password="postgres", host="localhost", port="5432"
         )
-        self.cursor = self.conn.cursor()
+        self.cursor = self.conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
 
     def get_all_patients(self):
         self.cursor.execute("SELECT * FROM patient LIMIT 10;")
@@ -88,6 +89,56 @@ class Controller:
         """,
         (patient_id, name))
         return self.cursor.fetchall()
+    
+    def get_hospitals_by_insurance(self,insurance,zip,condition):
+        self.cursor.execute(
+        """
+        SELECT * 
+        FROM hospital_location 
+        WHERE 
+            zip = %s
+            AND name IN (
+                SELECT mapping.name 
+                FROM mapping
+                JOIN patient
+                  ON patient.hospital = mapping.hospital 
+                WHERE LOWER(patient.insurance_provider) = %s
+            AND LOWER(patient.medical_condition) = %s
+        );
+        """,
+        (zip,insurance,condition))
+        return self.cursor.fetchall()
+    
+    def get_hospitals_by_flexible_criteria(self, insurance, zip, condition):
+        self.cursor.execute(
+            """
+            SELECT DISTINCT 
+                hl.object_id,
+                hl.name,
+                hl.address,
+                hl.city,
+                hl.state,
+                hl.zip,
+                hl.telephone,
+                hl.type,
+                hl.status,
+                hl.helipad,
+                p.insurance_provider,
+                p.medical_condition
+            FROM hospital_location hl
+            LEFT JOIN mapping m ON hl.name = m.name
+            LEFT JOIN patient p ON p.hospital = m.hospital
+            WHERE 
+                (
+                LOWER(p.insurance_provider) = LOWER(%s)
+                OR LOWER(p.medical_condition) = LOWER(%s)
+                AND hl.zip = %s
+                );
+            """,
+            (insurance, condition, zip)
+        )
+        return self.cursor.fetchall()
+
         
 
 

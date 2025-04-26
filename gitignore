@@ -1,0 +1,33 @@
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Virtual environment
+venv/
+env/
+.venv/
+.mvc_app/lib/
+
+# VS Code settings
+.vscode/
+
+# Python environment
+.Python
+pip-wheel-metadata/
+
+# pycache everywhere
+**/__pycache__/
+
+# Any compiled output
+build/
+dist/
+
+# Server runtime files
+*.pid
+
+# Ignore your IDE files
+.idea/
+
+# Ignore environment configs
+.env

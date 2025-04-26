@@ -1,50 +1,79 @@
 body {
-    font-family: Arial, sans-serif;
-    margin: 20px;
-    background: #f8f8f8;
-  }
-  
-  h2 {
-    color: #333;
-  }
-  
-  table {
-    width: 100%;
-    border-collapse: collapse;
-    margin-bottom: 40px;
-  }
-  
-  th,
-  td {
-    padding: 8px 12px;
-    border: 1px solid #ccc;
-    text-align: left;
-  }
-  
-  th {
-    background-color: #eaeaea;
-  }
-  
-  form {
-    margin-bottom: 30px;
-    padding: 10px;
-    background: #fff;
-    border: 1px solid #ccc;
-    max-width: 600px;
-  }
-  
-  label,
-  input {
-    display: block;
-    margin-bottom: 10px;
-  }
-  
-  input {
-    padding: 5px;
-    width: 100%;
-  }
-  
-  button {
-    padding: 8px 12px;
-  }
-  
+  font-family: Arial, sans-serif;
+  margin: 20px;
+  background: #f8f8f8;
+}
+
+h2 {
+  color: #333;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-bottom: 40px;
+}
+
+th,
+td {
+  padding: 8px 12px;
+  border: 1px solid #ccc;
+  text-align: left;
+}
+
+th {
+  background-color: #eaeaea;
+}
+
+form {
+  margin-bottom: 30px;
+  padding: 10px;
+  background: #fff;
+  border: 1px solid #ccc;
+  max-width: 600px;
+}
+
+label,
+input {
+  display: block;
+  margin-bottom: 10px;
+}
+
+input {
+  padding: 5px;
+  width: 100%;
+}
+
+button {
+  padding: 8px 12px;
+}
+
+/* NEW HERO SECTION UPDATE */
+.hero {
+  position: relative;
+  background: linear-gradient(-45deg, #6fb1fc, #4364f7, #6fb1fc, #1e3c72);
+  background-size: 400% 400%;
+  animation: gradientBG 10s ease infinite;
+  height: 75vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #fff;
+  text-align: center;
+}
+
+@keyframes gradientBG {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+.hero-content {
+  animation: fadeIn 2s ease;
+  z-index: 2;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}

@@ -1,148 +1,133 @@
+<!-- Updated search.html with table filters -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Search Hospitals</title>
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
-        rel="stylesheet"/>
-</head>
-<body>
-  <div class="container py-5">
-    <h2 class="mb-4 text-center">Find a Hospital</h2>
-    <form id="search-form" class="row g-3 mb-4">
-      <div class="col-md-3">
-        <input name="zip" type="text" class="form-control" placeholder="ZIP Code" required>
-      </div>
-      <div class="col-md-3">
-        <select name="insurance" class="form-select">
-          <option value="">All Insurance</option>
-          <option>Blue Cross</option>
-          <option>Medicare</option>
-          <option>Aetna</option>
-          <option>Cigna</option>
-          <option>UnitedHealthcare</option>
-        </select>
-      </div>
-      <div class="col-md-3">
-        <select name="condition" class="form-select">
-          <option value="">All Conditions</option>
-          <option>Cancer</option>
-          <option>Obesity</option>
-          <option>Asthma</option>
-          <option>Hypertension</option>
-          <option>Arthritis</option>
-          <option>Diabetes</option>
-        </select>
-      </div>
-      <div class="col-md-3">
-        <select name="age_group" class="form-select">
-          <option value="">All Age Groups</option>
-          <option value="Pediatric">Pediatric (&lt;18)</option>
-          <option value="Adult">Adult (18–65)</option>
-          <option value="Elderly">Elderly (&gt;65)</option>
-        </select>
-      </div>
-      <div class="col-12 text-center">
-        <button type="submit" class="btn btn-primary">Search</button>
-      </div>
-    </form>
 
-    <table class="table table-striped" id="results-table">
-      <thead>
-        <tr>
-          <th>Name</th><th>Address</th><th>City, State</th>
-          <th>Dist (mi)</th><th>Avg Stay</th><th>Est. Cost</th>
-          <th>Status</th><th>Helipad</th>
-        </tr>
-      </thead>
-      <tbody></tbody>
-    </table>
-  </div>
+  <!-- Bootstrap and Icons -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet"/>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet"/>
+  <link rel="stylesheet" href="/website/style.css">
 
-  <script src="/website/app.js"></script>
-
-  <title>AMS Hospital Finder</title>
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
-        rel="stylesheet"/>
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css"
-        rel="stylesheet"/>
   <style>
     .navbar { background: #fff; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
-    .hero { position: relative; background: url('https://source.unsplash.com/1600x900/?hospital,healthcare') center/cover no-repeat; height: 75vh; display:flex;align-items:center;justify-content:center;color:#fff; }
-    .hero::before { content:"";position:absolute;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.5); }
-    .hero-content { position:relative; z-index:2; text-align:center; }
-    .feature-icon { font-size:3rem; color:#0d6efd; }
     footer { background:#f8f9fa; padding:1.5rem 0; text-align:center; }
     footer a { color:#6c757d; margin:0 .5rem; font-size:1.25rem; }
   </style>
 </head>
 <body>
-  <nav class="navbar navbar-expand-lg">
-    <div class="container">
-      <a class="navbar-brand fw-bold" href="/">AMS Hospital Finder</a>
-      <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
-              data-bs-target="#navbarNav"><span class="navbar-toggler-icon"></span></button>
-      <div class="collapse navbar-collapse" id="navbarNav">
-        <ul class="navbar-nav ms-auto">
-          <li class="nav-item"><a class="nav-link active" href="/">Home</a></li>
-          <li class="nav-item"><a class="nav-link" href="/search">Search</a></li>
-          <li class="nav-item"><a class="nav-link" href="#features">Features</a></li>
-        </ul>
-      </div>
-    </div>
-  </nav>
 
-  <section class="hero">
-    <div class="hero-content">
-      <h1 class="display-4 fw-bold">Find the Best Care, Near You</h1>
-      <p class="lead mb-4">Locate top-rated hospitals by distance, insurance, specialty, and more.</p>
-      <a href="/search" class="btn btn-lg btn-primary">Start Searching</a>
+<!-- NAVBAR -->
+<nav class="navbar navbar-expand-lg">
+  <div class="container">
+    <a class="navbar-brand fw-bold" href="/">AMS Hospital Finder</a>
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarNav">
+      <ul class="navbar-nav ms-auto">
+        <li class="nav-item"><a class="nav-link" href="/">Home</a></li>
+        <li class="nav-item"><a class="nav-link active" href="/search">Search</a></li>
+        <li class="nav-item"><a class="nav-link" href="/#features">Features</a></li>
+      </ul>
     </div>
-  </section>
+  </div>
+</nav>
 
-  <section id="features" class="py-5">
-    <div class="container text-center">
-      <h2 class="mb-5">Why Choose AMS Hospital Finder?</h2>
-      <div class="row g-4">
-        <div class="col-md-4">
-          <i class="bi bi-geo-alt feature-icon"></i>
-          <h5 class="mt-3">Nearest Hospitals</h5>
-          <p>Search by ZIP code, city, or state to find hospitals closest to you instantly.</p>
-        </div>
-        <div class="col-md-4">
-          <i class="bi bi-heart-pulse feature-icon"></i>
-          <h5 class="mt-3">Condition Expertise</h5>
-          <p>Filter hospitals experienced in treating conditions like diabetes, cancer, and more.</p>
-        </div>
-        <div class="col-md-4">
-          <i class="bi bi-file-medical feature-icon"></i>
-          <h5 class="mt-3">Insurance Support</h5>
-          <p>Only see hospitals that accept your insurance provider to avoid unexpected costs.</p>
-        </div>
-      </div>
+<!-- SEARCH FORM -->
+<div class="container py-5">
+  <h2 class="mb-4 text-center">Find a Hospital</h2>
+
+  <form id="search-form" class="row g-3 mb-5">
+    <div class="col-md-3">
+      <input name="zip" type="text" class="form-control" placeholder="ZIP Code" required>
     </div>
-  </section>
-
-  <section class="py-5 bg-primary text-white text-center">
-    <div class="container">
-      <h3 class="mb-3">Ready to Find Your Hospital?</h3>
-      <a href="/search" class="btn btn-light btn-lg">Search Now</a>
+    <div class="col-md-3">
+      <select name="insurance" class="form-select">
+        <option value="">All Insurance</option>
+        <option>Blue Cross</option>
+        <option>Medicare</option>
+        <option>Aetna</option>
+        <option>Cigna</option>
+        <option>UnitedHealthcare</option>
+      </select>
     </div>
-  </section>
-
-  <footer>
-    <div class="container">
-      <p class="mb-2">&copy; <span id="year"></span> AMS Project. All rights reserved.</p>
-      <div>
-        <a href="#"><i class="bi bi-facebook"></i></a>
-        <a href="#"><i class="bi bi-twitter"></i></a>
-        <a href="#"><i class="bi bi-linkedin"></i></a>
-      </div>
+    <div class="col-md-3">
+      <select name="condition" class="form-select">
+        <option value="">All Conditions</option>
+        <option>Cancer</option>
+        <option>Obesity</option>
+        <option>Asthma</option>
+        <option>Hypertension</option>
+        <option>Arthritis</option>
+        <option>Diabetes</option>
+      </select>
     </div>
-  </footer>
+    <div class="col-md-3">
+      <select name="age_group" class="form-select">
+        <option value="">All Age Groups</option>
+        <option value="Pediatric">Pediatric (&lt;18)</option>
+        <option value="Adult">Adult (18–65)</option>
+        <option value="Elderly">Elderly (&gt;65)</option>
+      </select>
+    </div>
+    <div class="col-12 text-center">
+      <button type="submit" class="btn btn-primary">Search</button>
+    </div>
+  </form>
 
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-  <script>document.getElementById('year').textContent = new Date().getFullYear();</script>
+  <!-- FILTERS ABOVE TABLE -->
+  <div class="row mb-4">
+    <div class="col-md-6">
+      <select id="table-filter-insurance" class="form-select">
+        <option value="">Filter by Insurance Provider</option>
+      </select>
+    </div>
+    <div class="col-md-6">
+      <select id="table-filter-condition" class="form-select">
+        <option value="">Filter by Medical Condition</option>
+      </select>
+    </div>
+  </div>
+
+  <!-- RESULTS TABLE -->
+  <table class="table table-striped" id="results-table">
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Address</th>
+        <th>City</th>
+        <th>State</th>
+        <th>Zip</th>
+        <th>Telephone</th>
+        <th>Type</th>
+        <th>Status</th>
+        <th>Helipad</th>
+        <th>Insurance Provider</th>
+        <th>Medical Condition</th>
+      </tr>
+    </thead>
+    <tbody></tbody>
+  </table>
+</div>
+
+<!-- FOOTER -->
+<footer>
+  <div class="container">
+    <p class="mb-2">&copy; <span id="year"></span> AMS Project. All rights reserved.</p>
+    <div>
+      <a href="#"><i class="bi bi-facebook"></i></a>
+      <a href="#"><i class="bi bi-twitter"></i></a>
+      <a href="#"><i class="bi bi-linkedin"></i></a>
+    </div>
+  </div>
+</footer>
+
+<!-- Scripts -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script src="/website/app.js"></script>
+<script>document.getElementById('year').textContent = new Date().getFullYear();</script>
 </body>
 </html>
