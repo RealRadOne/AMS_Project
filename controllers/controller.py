@@ -41,28 +41,27 @@ class Controller:
         rows = self.cursor.fetchall()
         return [Hospital(*row) for row in rows]
     
-    def get_nearest_hospital(self,city,state,zip_code):
-        coords = self.get_coords(city,state,zip_code)
-        if not coords:
-            return []
-        lat,lon = coords
-
+    def get_hospitals_by_location(self, latitude, longitude, distance):
         self.cursor.execute(
-            """
-            SELECT * FROM(
-            SELECT name, address, city, state, zip, telephone, type, status,county, country, latitude, longitude, owner, helipad,
-               (6371 * 2 * ASIN(SQRT(
-                   POWER(SIN(RADIANS(%s - latitude) / 2), 2) +
-                   COS(RADIANS(%s)) * COS(RADIANS(latitude)) *
-                   POWER(SIN(RADIANS(%s - longitude) / 2), 2)
-               ))) AS distance_km
+        """
+        SELECT *
+        FROM (
+            SELECT *, (
+                3959 * acos(
+                    cos(radians(%s)) * cos(radians(latitude)) *
+                    cos(radians(longitude) - radians(%s)) +
+                    sin(radians(%s)) * sin(radians(latitude))
+                )
+            ) AS distance_miles
             FROM hospital_location
-            ) AS sub
-            WHERE distance_km <= %s
-            ORDER BY distance_km ASC
-            """,(lat, lat, lon, 10))
+        ) AS sub
+        WHERE distance_miles <= %s
+        ORDER BY distance_miles ASC
+        """,
+        (latitude, longitude, latitude, distance))
         rows = self.cursor.fetchall()
-        return [Hospital(*row) for row in rows]
+        return [dict(row) for row in rows]  # assuming RealDictCursor
+
     
     def get_hospital_by_disease(self, condition):
         self.cursor.execute(
@@ -93,7 +92,7 @@ class Controller:
     def get_hospitals_by_insurance(self,insurance,zip,condition):
         self.cursor.execute(
         """
-        SELECT * 
+        SELECT *
         FROM hospital_location 
         WHERE 
             zip = %s
@@ -109,35 +108,37 @@ class Controller:
         (zip,insurance,condition))
         return self.cursor.fetchall()
     
-    def get_hospitals_by_flexible_criteria(self, insurance, zip, condition):
+    def get_hospitals_by_flexible_criteria(self, latitude, longitude, distance):
         self.cursor.execute(
-            """
-            SELECT DISTINCT 
-                hl.object_id,
-                hl.name,
-                hl.address,
-                hl.city,
-                hl.state,
-                hl.zip,
-                hl.telephone,
-                hl.type,
-                hl.status,
-                hl.helipad,
-                p.insurance_provider,
-                p.medical_condition
-            FROM hospital_location hl
-            LEFT JOIN mapping m ON hl.name = m.name
-            LEFT JOIN patient p ON p.hospital = m.hospital
-            WHERE 
-                (
-                LOWER(p.insurance_provider) = LOWER(%s)
-                OR LOWER(p.medical_condition) = LOWER(%s)
-                AND hl.zip = %s
-                );
-            """,
-            (insurance, condition, zip)
-        )
+        """
+        SELECT 
+        sub.name,
+        sub.address, 
+        sub.county,
+        sub.distance_miles,
+        sub.helipad,
+        sub.telephone,
+        sub.type,
+        sub.zip,
+        sub.status,
+        patient.insurance_provider, 
+        patient.medical_condition
+        FROM (
+            SELECT *, (
+                3959 * acos(
+                    cos(radians(%s)) * cos(radians(latitude)) *
+                    cos(radians(longitude) - radians(%s)) +
+                    sin(radians(%s)) * sin(radians(latitude)))
+            ) AS distance_miles
+            FROM hospital_location
+        ) AS sub
+        JOIN mapping ON mapping.name = sub.name
+        JOIN patient ON patient.hospital = mapping.hospital
+        WHERE distance_miles <= %s
+        """,
+        (latitude, longitude, latitude, distance))
         return self.cursor.fetchall()
+
 
         
 

@@ -1,15 +1,13 @@
-// Updated app.js
+let hospitalsData = []; // Full fetched data
+let currentlyDisplayed = []; // Current view
 
-let hospitalsData = []; // Full data from backend
-let currentlyDisplayed = []; // What is currently shown after backend search
-
-// Fetch hospitals initially
-async function fetchHospitals(zip = '', insurance = '', condition = '') {
+// Fetch hospitals using location and distance
+async function fetchHospitalsByDistance(latitude, longitude, distance) {
   try {
     const res = await fetch('/api/search', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ zip, insurance, condition, age_group: '' })
+      body: JSON.stringify({ latitude, longitude, distance })
     });
 
     hospitalsData = await res.json();
@@ -23,87 +21,110 @@ async function fetchHospitals(zip = '', insurance = '', condition = '') {
 
 // Populate the hospital table
 function populateTable(id, data) {
-  const table = document.getElementById(id);
-  if (!table) return;
-  if (data.length === 0) {
-    table.querySelector('tbody').innerHTML = '<tr><td colspan="11" class="text-center">No hospitals found</td></tr>';
-    return;
-  }
+  const table = document.getElementById(id).getElementsByTagName('tbody')[0];
+  table.innerHTML = ''; // Clear the table
 
-  table.querySelector('tbody').innerHTML = data.map(h => `
-    <tr>
-      <td>${h.name}</td>
-      <td>${h.address}</td>
-      <td>${h.city}</td>
-      <td>${h.state}</td>
-      <td>${h.zip}</td>
-      <td>${h.telephone}</td>
-      <td>${h.type}</td>
-      <td>${h.status}</td>
-      <td>${h.helipad}</td>
-      <td>${h.insurance_provider || '-'}</td>
-      <td>${h.medical_condition || '-'}</td>
-    </tr>
-  `).join('');
+  data.forEach(hospital => {
+    const row = table.insertRow();
+    Object.values(hospital).forEach(value => {
+      const cell = row.insertCell();
+      cell.textContent = value;
+    });
+  });
 }
 
 // Populate dropdown filters dynamically
 function populateFilters() {
-  const insuranceSet = new Set();
-  const conditionSet = new Set();
+  const insuranceFilter = document.getElementById('table-filter-insurance');
+  const conditionFilter = document.getElementById('table-filter-condition');
 
-  hospitalsData.forEach(h => {
-    if (h.insurance_provider) insuranceSet.add(h.insurance_provider);
-    if (h.medical_condition) conditionSet.add(h.medical_condition);
+  // Populate filters with unique values from hospitalsData
+  const insuranceOptions = new Set();
+  const conditionOptions = new Set();
+
+  hospitalsData.forEach(hospital => {
+    insuranceOptions.add(hospital['insurance_provider']);
+    conditionOptions.add(hospital['medical_condition']);
   });
 
-  populateDropdown('table-filter-insurance', insuranceSet);
-  populateDropdown('table-filter-condition', conditionSet);
-}
+  // Populate insurance dropdown
+  insuranceFilter.innerHTML = '<option value="">Filter by Insurance Provider</option>';
+  insuranceOptions.forEach(option => {
+    const opt = document.createElement('option');
+    opt.value = option;
+    opt.textContent = option;
+    insuranceFilter.appendChild(opt);
+  });
 
-function populateDropdown(id, values) {
-  const select = document.getElementById(id);
-  select.innerHTML = '<option value="">All</option>'; // Reset first
-  values.forEach(val => {
-    const option = document.createElement('option');
-    option.value = val;
-    option.textContent = val;
-    select.appendChild(option);
+  // Populate condition dropdown
+  conditionFilter.innerHTML = '<option value="">Filter by Medical Condition</option>';
+  conditionOptions.forEach(option => {
+    const opt = document.createElement('option');
+    opt.value = option;
+    opt.textContent = option;
+    conditionFilter.appendChild(opt);
   });
 }
 
-// Filter hospitals in the table only based on dropdowns
+// Filter hospitals in the table based on dropdown selections
 function applyTableFilters() {
-  const insuranceInput = document.getElementById('table-filter-insurance').value.trim().toLowerCase();
-  const conditionInput = document.getElementById('table-filter-condition').value.trim().toLowerCase();
+  const insurance = document.getElementById('table-filter-insurance').value.toLowerCase();
+  const condition = document.getElementById('table-filter-condition').value.toLowerCase();
 
-  let filtered = currentlyDisplayed;
+  currentlyDisplayed = hospitalsData.filter(hospital => {
+    return (!insurance || hospital.insurance_provider.toLowerCase() === insurance) &&
+           (!condition || hospital.medical_condition.toLowerCase() === condition);
+  });
 
-  if (insuranceInput) {
-    filtered = filtered.filter(h => h.insurance_provider && h.insurance_provider.toLowerCase() === insuranceInput);
-  }
-  if (conditionInput) {
-    filtered = filtered.filter(h => h.medical_condition && h.medical_condition.toLowerCase() === conditionInput);
-  }
-
-  populateTable('results-table', filtered);
+  populateTable('results-table', currentlyDisplayed);
 }
 
-// When user submits the top search form
-const searchForm = document.getElementById('search-form');
-searchForm.addEventListener('submit', async (e) => {
-  e.preventDefault();
-  const zip = searchForm.zip.value.trim();
-  const insurance = searchForm.insurance.value.trim();
-  const condition = searchForm.condition.value.trim();
+// Handle Locate Me button
+const locateBtn = document.getElementById('locate-btn');
+locateBtn.addEventListener('click', () => {
+  if (navigator.geolocation) {
+    navigator.geolocation.getCurrentPosition(position => {
+      const latitude = position.coords.latitude;
+      const longitude = position.coords.longitude;
 
-  await fetchHospitals(zip, insurance, condition);
+      document.getElementById('latitude').value = latitude;
+      document.getElementById('longitude').value = longitude;
+      document.getElementById('latitude-visible').value = latitude;
+      document.getElementById('longitude-visible').value = longitude;
+
+      // Immediately fetch hospitals after locating
+      const distance = document.getElementById('distance-slider').value;
+      fetchHospitalsByDistance(latitude, longitude, distance);
+
+    }, error => {
+      alert('Unable to retrieve your location');
+    });
+  } else {
+    alert('Geolocation is not supported by your browser');
+  }
 });
 
-// When user changes table filters
+// Distance Slider change
+const distanceSlider = document.getElementById('distance-slider');
+const distanceValue = document.getElementById('distance-value');
+
+distanceSlider.addEventListener('input', () => {
+  distanceValue.textContent = distanceSlider.value;
+});
+
+distanceSlider.addEventListener('change', () => {
+  const latitude = document.getElementById('latitude').value;
+  const longitude = document.getElementById('longitude').value;
+  const distance = distanceSlider.value;
+
+  if (latitude && longitude) {
+    fetchHospitalsByDistance(latitude, longitude, distance);
+  } else {
+    alert('Please click Locate Me first to get your location!');
+  }
+});
+
+// Filter changes
 ['table-filter-insurance', 'table-filter-condition'].forEach(id => {
   document.getElementById(id).addEventListener('change', applyTableFilters);
 });
-
-// Initial load
-fetchHospitals();

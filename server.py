@@ -28,12 +28,13 @@ def get_hospitals():
 @app.route('/api/nearest-hospitals',methods=['POST'])
 def get_nearest_by_location():
     data = request.get_json()
-    city = data.get('city', '').strip().upper()
-    state = data.get('state', '').strip().upper()
-    zip_code = data.get('zip', '').strip()
+    
+    latitude = data.get('latitude')
+    longitude = data.get('longitude')
+    distance = data.get('distance')
 
-    hospitals = controller.get_nearest_hospital(city,state,zip_code)
-    return jsonify([vars(h) for h in hospitals])
+    hospitals = controller.get_hospitals_by_location(latitude,longitude,distance)
+    return jsonify(hospitals)
 
 @app.route('/api/condition-hospitals',methods=['POST'])
 def get_hospitals_by_condition():
@@ -70,12 +71,17 @@ def search_hospitals_insurance():
 def search_hospitals():
     data = request.get_json()
 
-    zip = data.get('zip','').strip()
+    print(data)
+
+    latitude = data.get('latitude')
+    longitude = data.get('longitude')
+    distance = data.get('distance')
+
     insurance = data.get('insurance','').strip().lower()
     condition = data.get('condition','').strip().lower()
-    age_group = data.get('age_group','').strip().lower()
 
-    data =  controller.get_hospitals_by_flexible_criteria(insurance,zip,condition)
+    data =  controller.get_hospitals_by_flexible_criteria(latitude,longitude,distance)
+    #print(data)
     return jsonify(data)
 
 if __name__ == '__main__':
